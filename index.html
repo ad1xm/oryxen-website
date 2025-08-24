@@ -3,31 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oryxen - AI Innovation for Tomorrow</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/phosphor-icons@1.4.2/src/index.js"></script>
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.468/build/spline-viewer.js"></script>
+    <title>Oryxen - The Core of AI Innovation</title>
+    <meta name="description" content="Oryxen is a deep-tech research firm specializing in foundational AI technologies that power groundbreaking solutions for professionals and innovators.">
+    <meta name="author" content="Aditya Choudhury">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css">
+    
     <style>
-        * {
+        /* ====================================
+           1. CSS Custom Properties & Base Styles
+           ==================================== */
+        :root {
+            --primaryDark: #0A0A0B;
+            --secondaryDark: #1A1A1D;
+            --accentGray: #2D2D32;
+            --textPrimary: #E5E5E7;
+            --textWhite: #FFFFFF;
+            --textMuted: rgba(229, 229, 231, 0.75);
+            --borderGray: #404040;
+            --glassBg: rgba(255, 255, 255, 0.05);
+            --glassBorder: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px rgba(255, 255, 255, 0.15);
+            --subtleShadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            --neumorphismLight: rgba(255, 255, 255, 0.1);
+            --neumorphismDark: rgba(0, 0, 0, 0.3);
+            --accentColor: #00e0ff;
+            --navbarHeight: 5rem;
+            --subtleGradient: radial-gradient(circle, rgba(0, 224, 255, 0.05) 0%, transparent 50%);
+        }
+
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --primary-dark: #0A0A0B;
-            --secondary-dark: #1A1A1D;
-            --accent-gray: #2D2D32;
-            --text-primary: #E5E5E7;
-            --text-white: #FFFFFF;
-            --text-muted: rgba(229, 229, 231, 0.6);
-            --border-gray: #404040;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glow: 0 0 30px rgba(255, 255, 255, 0.15);
-            --subtle-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            --neumorphism-light: rgba(255, 255, 255, 0.1);
-            --neumorphism-dark: rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
         html {
@@ -37,27 +48,62 @@
         body {
             font-family: 'Inter', sans-serif;
             font-weight: 300;
-            background: var(--primary-dark);
-            color: var(--text-muted);
+            background: var(--primaryDark);
+            color: var(--textMuted);
             line-height: 1.7;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Page Load Animation */
-        .page-content {
+        /* Styles for the 3D background canvas */
+        #threeDCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            display: block;
+        }
+
+        .skipToContent {
+            position: absolute;
+            left: -999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            z-index: 9999;
+        }
+
+        .skipToContent:focus {
+            left: 10px;
+            top: 10px;
+            width: auto;
+            height: auto;
+            padding: 1rem 2rem;
+            background: var(--textWhite);
+            color: var(--primaryDark);
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .scrollAnimate {
             opacity: 0;
-            transform: translateY(30px);
-            animation: pageLoad 1.5s ease forwards;
+            transform: translateY(50px);
+            filter: blur(10px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        @keyframes pageLoad {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .scrollAnimate.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0px);
         }
 
-        /* Sticky Navigation */
+        /* ====================================
+           2. Navigation
+           ==================================== */
         .navbar {
             position: fixed;
             top: 0;
@@ -65,77 +111,88 @@
             right: 0;
             z-index: 1000;
             padding: 1.5rem 0;
+            height: var(--navbarHeight);
             transition: all 0.3s ease;
         }
 
         .navbar.scrolled {
             backdrop-filter: blur(20px);
             background: rgba(10, 10, 11, 0.8);
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glassBorder);
         }
 
-        .nav-container {
+        .navContainer {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 100%;
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: 200;
-            color: var(--text-white);
-            letter-spacing: -0.02em;
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            font-weight: 500;
+            color: var(--textWhite);
+            letter-spacing: -0.04em;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: var(--accentColor);
         }
 
-        .nav-links {
+        .navLinks {
             display: flex;
             gap: 3rem;
             list-style: none;
         }
 
-        .nav-links a {
-            color: var(--text-muted);
+        .navLinks a {
+            color: var(--textMuted);
             text-decoration: none;
             font-weight: 300;
-            font-size: 0.95rem;
+            font-size: clamp(0.9rem, 1vw, 0.95rem);
             letter-spacing: 0.01em;
-            transition: all 0.3s ease;
             position: relative;
         }
 
-        .nav-links a:hover {
-            color: var(--text-white);
+        .navLinks a:hover {
+            color: var(--textWhite);
         }
 
-        .nav-links a::after {
+        .navLinks a::after {
             content: '';
             position: absolute;
             bottom: -8px;
             left: 0;
             width: 0;
             height: 1px;
-            background: var(--text-white);
+            background: var(--textWhite);
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover::after {
+        .navLinks a:hover::after {
             width: 100%;
         }
 
-        /* Mobile Menu */
-        .menu-toggle {
+        .menuToggle {
             display: none;
             background: none;
             border: none;
-            color: var(--text-white);
+            color: var(--textWhite);
             font-size: 1.5rem;
             cursor: pointer;
         }
-
-        .mobile-menu {
+        
+        .mobileMenu {
             position: fixed;
             top: 0;
             right: -100%;
@@ -148,99 +205,117 @@
             justify-content: center;
             align-items: center;
             gap: 3rem;
-            transition: right 0.4s ease;
+            transition: right 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 999;
         }
 
-        .mobile-menu.active {
+        .mobileMenu.active {
             right: 0;
         }
 
-        .mobile-menu a {
-            color: var(--text-white);
+        .mobileMenu a {
+            color: var(--textWhite);
             text-decoration: none;
             font-size: 1.5rem;
             font-weight: 300;
             letter-spacing: -0.01em;
         }
 
-        .close-menu {
+        .closeMenu {
             position: absolute;
             top: 2rem;
             right: 2rem;
             background: none;
             border: none;
-            color: var(--text-white);
+            color: var(--textWhite);
             font-size: 2rem;
             cursor: pointer;
         }
 
-        /* Neumorphic Button */
-        .neu-button {
-            background: var(--secondary-dark);
+        /* ====================================
+           3. Reusable Components
+           ==================================== */
+        .neuButton {
+            background: linear-gradient(145deg, #1e1e1e, #0a0a0a);
             border: none;
-            padding: 1rem 2.5rem;
-            color: var(--text-white);
+            padding: 1.2rem 3rem;
+            color: var(--textWhite);
             font-weight: 400;
             letter-spacing: 0.01em;
             cursor: pointer;
-            border-radius: 16px;
+            border-radius: 20px;
             font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             box-shadow: 
-                8px 8px 16px var(--neumorphism-dark),
-                -8px -8px 16px var(--neumorphism-light);
+                12px 12px 24px rgba(0, 0, 0, 0.4),
+                -12px -12px 24px rgba(255, 255, 255, 0.02);
             position: relative;
             overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1rem;
+            text-align: center; /* FIX: Added text-align to center the button's content */
         }
 
-        .neu-button:hover {
+        .neuButton:hover {
+            transform: translateY(-4px) scale(1.05);
             box-shadow: 
-                12px 12px 24px var(--neumorphism-dark),
-                -12px -12px 24px var(--neumorphism-light),
-                var(--glow);
-            transform: translateY(-2px);
+                16px 16px 32px rgba(0, 0, 0, 0.5),
+                -16px -16px 32px rgba(255, 255, 255, 0.04),
+                0 0 40px var(--accentColor);
         }
 
-        .neu-button:active {
+        .neuButton:active {
             box-shadow: 
-                inset 4px 4px 8px var(--neumorphism-dark),
-                inset -4px -4px 8px var(--neumorphism-light);
+                inset 4px 4px 8px var(--neumorphismDark),
+                inset -4px -4px 8px var(--neumorphismLight);
             transform: translateY(0);
         }
 
-        /* Glassmorphic Cards */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
+        .glassCard {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
             padding: 2.5rem;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--subtleShadow);
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-            box-shadow: var(--glow);
+        .glassCard:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 50px rgba(255, 255, 255, 0.1);
         }
 
-        /* Scroll Animations */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(50px);
-            filter: blur(10px);
-            transition: all 0.8s ease;
+        .techTag {
+            background: var(--glassBg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glassBorder);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--textMuted);
+            transition: all 0.3s ease;
         }
 
-        .scroll-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0px);
+        .techTag:hover {
+            color: var(--textWhite);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px) scale(1.1);
         }
-
-        /* Hero Section */
+        
+        /* ====================================
+           4. Sections
+           ==================================== */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -249,7 +324,7 @@
             position: relative;
         }
 
-        .hero-container {
+        .heroContainer {
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
@@ -258,19 +333,26 @@
             gap: 6rem;
             align-items: center;
         }
-
-        /* Enhanced animations and interactions */
-        .hero-content h1 {
-            font-size: clamp(3rem, 6vw, 5.5rem);
-            font-weight: 200;
-            line-height: 1.05;
-            margin-bottom: 2rem;
-            color: var(--text-white);
-            letter-spacing: -0.04em;
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+        
+        @media (min-width: 1025px) {
+            .heroContent {
+                padding-top: var(--navbarHeight);
+            }
         }
 
-        .hero-content .highlight {
+        .heroContent h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 600;
+            line-height: 1.05;
+            margin-bottom: 2rem;
+            color: var(--textWhite);
+            letter-spacing: -0.04em;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+        }
+
+        .heroContent .highlight {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             background-size: 200% 200%;
             -webkit-background-clip: text;
@@ -284,200 +366,109 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Smooth transitions */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        /* Enhanced glassmorphism */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transition: left 0.8s ease;
-        }
-
-        .glass-card:hover::before {
-            left: 100%;
-        }
-
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.15),
-                0 0 50px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Enhanced neumorphic buttons */
-        .neu-button {
-            background: linear-gradient(145deg, #1e1e1e, #0a0a0a);
-            border: none;
-            padding: 1.2rem 3rem;
-            color: var(--text-white);
-            font-weight: 400;
-            letter-spacing: 0.01em;
-            cursor: pointer;
-            border-radius: 20px;
+        .heroContent p {
             font-family: 'Inter', sans-serif;
-            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
-            box-shadow: 
-                12px 12px 24px rgba(0, 0, 0, 0.4),
-                -12px -12px 24px rgba(255, 255, 255, 0.02);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .neu-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .neu-button:hover::before {
-            transform: translateX(100%);
-        }
-
-        .neu-button:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 
-                16px 16px 32px rgba(0, 0, 0, 0.5),
-                -16px -16px 32px rgba(255, 255, 255, 0.04),
-                0 0 40px rgba(255, 255, 255, 0.1);
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
             font-weight: 300;
             margin-bottom: 3rem;
             line-height: 1.8;
-            color: var(--text-muted);
+            color: var(--textMuted);
         }
 
-        /* Enhanced Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.02) 0%, transparent 50%);
-            z-index: -2;
-            animation: bgFloat 20s ease-in-out infinite;
-        }
-
-        @keyframes bgFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-20px, -20px) scale(1.05); }
-            66% { transform: translate(20px, -10px) scale(0.95); }
-        }
-
-        /* Floating particles */
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float infinite ease-in-out;
-        }
-
-        .particle:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
-        .particle:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 2s; }
-        .particle:nth-child(3) { left: 30%; animation-duration: 10s; animation-delay: 4s; }
-        .particle:nth-child(4) { left: 40%; animation-duration: 14s; animation-delay: 1s; }
-        .particle:nth-child(5) { left: 50%; animation-duration: 9s; animation-delay: 3s; }
-        .particle:nth-child(6) { left: 60%; animation-duration: 11s; animation-delay: 5s; }
-        .particle:nth-child(7) { left: 70%; animation-duration: 13s; animation-delay: 0.5s; }
-        .particle:nth-child(8) { left: 80%; animation-duration: 7s; animation-delay: 2.5s; }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
-        .hero-visual {
+        .heroVisual {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 600px;
+            height: clamp(300px, 40vw, 600px);
             position: relative;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: var(--subtleShadow);
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        
+        .heroVisual::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: var(--subtleGradient);
+            animation: rotateGlow 8s linear infinite;
+            transform-origin: center;
+            opacity: 0.8;
+            filter: blur(50px);
         }
 
-        .hero-placeholder {
-            width: 100%;
-            height: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+        .heroVisual::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            bottom: 1px;
+            right: 1px;
+            background: var(--primaryDark);
             border-radius: 20px;
+            z-index: 1;
+        }
+
+        .aiBrain {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            z-index: 2;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 1rem;
-            transition: all 0.3s ease;
+            animation: brainAnimate 2s ease-out forwards;
         }
 
-        .hero-placeholder:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-            box-shadow: var(--glow);
+        .aiBrain .core {
+            width: 80px;
+            height: 80px;
+            background: var(--accentColor);
+            border-radius: 50%;
+            box-shadow: 0 0 25px var(--accentColor), 0 0 50px var(--accentColor), 0 0 100px var(--accentColor);
+            animation: pulse 2s infinite;
         }
 
-        .hero-placeholder i {
-            font-size: 4rem;
-            color: var(--text-white);
-            margin-bottom: 1rem;
+        .aiBrain .nodes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
         }
 
-        .hero-placeholder p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 300;
+        .aiBrain .node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--textWhite);
+            border-radius: 50%;
+            opacity: 0;
+            animation: nodeFadeIn 1s forwards;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        @keyframes nodeFadeIn {
+            0% { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes brainAnimate {
+            from { transform: scale(0.8) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
         /* About Section */
@@ -485,119 +476,129 @@
             padding: 120px 2rem;
         }
 
-        .about-container {
+        .aboutContainer {
             max-width: 1000px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .section-title {
+        .sectionTitle {
+            font-family: 'Oswald', sans-serif;
             font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 200;
-            color: var(--text-white);
-            margin-bottom: 2rem;
+            font-weight: 500;
+            color: var(--textWhite);
+            margin-bottom: 1.5rem;
             letter-spacing: -0.02em;
+            text-transform: uppercase;
         }
 
-        .section-subtitle {
-            font-size: 1.3rem;
+        .sectionSubtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.3rem);
             font-weight: 300;
-            color: var(--text-muted);
+            color: var(--textMuted);
             margin-bottom: 4rem;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .founder-info {
+        .founderInfo {
             margin: 3rem 0;
             padding: 2rem;
-            background: var(--glass-bg);
+            background: var(--glassBg);
             backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--glassBorder);
             border-radius: 20px;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
+            box-shadow: var(--subtleShadow);
         }
 
-        .founder-info h3 {
-            color: var(--text-white);
-            font-weight: 400;
+        .founderInfo h3 {
+            color: var(--textWhite);
+            font-weight: 600;
             font-size: 1.2rem;
             letter-spacing: -0.01em;
             margin-bottom: 0.5rem;
         }
+        .founderName {
+            white-space: nowrap;
+        }
 
-        .founder-info p {
-            color: var(--text-muted);
+        .founderInfo p {
+            color: var(--textMuted);
             font-weight: 300;
         }
 
-        .about-stats {
+        .aboutStats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-top: 6rem;
         }
 
-        .stat-item {
+        .statItem {
             text-align: center;
         }
 
-        .stat-number {
+        .statNumber {
+            font-family: 'Oswald', sans-serif;
             font-size: 3rem;
             font-weight: 200;
-            color: var(--text-white);
+            color: var(--textWhite);
             display: block;
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
         }
 
-        .stat-label {
+        .statLabel {
+            font-family: 'Inter', sans-serif;
             font-weight: 300;
-            color: var(--text-muted);
+            color: var(--textMuted);
+            text-transform: uppercase;
         }
 
         /* Services Section */
         .services {
             padding: 120px 2rem;
-            background: var(--secondary-dark);
+            background: var(--secondaryDark);
         }
 
-        .services-container {
+        .servicesContainer {
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .services-grid {
+        .servicesGrid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 3rem;
             margin-top: 4rem;
         }
 
-        .service-card {
-            padding: 0.5rem;
+        .serviceCard {
+            padding: 2.5rem;
         }
 
-        .service-icon {
+        .serviceIcon {
             font-size: 3rem;
-            color: var(--text-white);
+            color: var(--textWhite);
             margin-bottom: 2rem;
         }
 
-        .service-card h3 {
+        .serviceCard h3 {
             font-size: 1.5rem;
             font-weight: 400;
-            color: var(--text-white);
+            color: var(--textWhite);
             margin-bottom: 1rem;
             letter-spacing: -0.01em;
         }
 
-        .service-card p {
+        .serviceCard p {
             font-weight: 300;
-            color: var(--text-muted);
+            color: var(--textMuted);
             line-height: 1.8;
         }
 
@@ -606,16 +607,16 @@
             padding: 120px 2rem;
         }
 
-        .project-container {
+        .projectContainer {
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .project-showcase {
+        .projectShowcase {
             margin-top: 4rem;
         }
 
-        .project-card {
+        .projectCard {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
@@ -623,384 +624,681 @@
             margin-bottom: 6rem;
         }
 
-        .project-info h3 {
-            font-size: 2rem;
+        .projectInfo h3 {
+            font-size: clamp(1.8rem, 3vw, 2rem);
             font-weight: 400;
-            color: var(--text-white);
+            color: var(--textWhite);
             margin-bottom: 1.5rem;
             letter-spacing: -0.01em;
         }
 
-        .project-info p {
+        .projectInfo p {
             font-weight: 300;
-            color: var(--text-muted);
+            color: var(--textMuted);
             margin-bottom: 2rem;
             line-height: 1.8;
         }
 
-        .project-tech {
+        .projectTech {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
 
-        .tech-tag {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            padding: 0.5rem 1rem;
+        .projectVisual {
+            height: clamp(300px, 40vw, 500px);
+            background: var(--glassBg);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 300;
-            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: var(--subtleShadow);
         }
 
-        .project-visual {
-            height: 400px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
+        .projectMockup {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 224, 255, 0.1) 0%, transparent 70%);
+            animation: pulseBg 3s linear infinite;
         }
 
-        .project-placeholder {
-            font-weight: 300;
-            color: var(--text-muted);
-            font-size: 1.1rem;
+        @keyframes pulseBg {
+            0% { background-size: 100% 100%; }
+            50% { background-size: 120% 120%; }
+            100% { background-size: 100% 100%; }
+        }
+
+        .projectMockupInner {
+            width: 80%;
+            height: 80%;
+            background: rgba(10, 10, 11, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 224, 255, 0.1);
+            padding: 2rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .codeLine {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            animation: typing 3s infinite steps(20) alternate;
+        }
+        .codeLine:nth-child(1) { width: 80%; animation-delay: 0.2s; }
+        .codeLine:nth-child(2) { width: 90%; animation-delay: 0.4s; }
+        .codeLine:nth-child(3) { width: 60%; animation-delay: 0.6s; }
+        .codeLine:nth-child(4) { width: 75%; animation-delay: 0.8s; }
+        .codeLine:nth-child(5) { width: 50%; animation-delay: 1.0s; }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Our Focus Section */
+        .focusSection {
+            padding: 120px 2rem;
+        }
+
+        .focusContainer {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .focusContainer ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .focusContainer ul li {
+            background: var(--accentGray);
+            color: var(--textPrimary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 24px;
+            font-weight: 400;
+        }
+
+        /* Legal Section */
+        .legalSection {
+            padding: 120px 2rem;
+        }
+        
+        .legalContainer {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .legalContainer p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* Support Section */
+        .supportSection {
+            padding: 120px 2rem;
+            background: var(--secondaryDark);
+            text-align: center;
+        }
+        
+        .supportContainer {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .supportContainer .glassCard {
+            padding: 4rem;
+        }
+        
+        .contributeUnavailablePage {
+            display: none;
+            padding: 120px 2rem;
+            text-align: center;
+        }
+        
+        .contributeUnavailablePage .glassCard {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 4rem;
         }
 
         /* Contact Section */
         .contact {
             padding: 120px 2rem;
-            background: var(--secondary-dark);
+            background: var(--secondaryDark);
+        }
+        
+        .contactSuccessPage {
+            display: none;
+            padding: 120px 2rem;
+            text-align: center;
         }
 
-        .contact-container {
+        .contactContainer {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .contact-form {
+        .contactForm {
             margin-top: 4rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 2rem;
+        .formGroup {
             text-align: left;
         }
 
-        .form-group label {
+        .formGroup label {
             display: block;
             margin-bottom: 0.8rem;
             font-weight: 400;
-            color: var(--text-white);
+            color: var(--textWhite);
             font-size: 0.95rem;
         }
 
-        .form-input {
+        .formInput {
             width: 100%;
             padding: 1.5rem;
-            background: var(--glass-bg);
+            background: var(--glassBg);
             backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--glassBorder);
             border-radius: 16px;
-            color: var(--text-white);
+            color: var(--textWhite);
             font-family: 'Inter', sans-serif;
             font-weight: 300;
             transition: all 0.3s ease;
         }
 
-        .form-input:focus {
+        .formInput:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(0, 224, 255, 0.5);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: var(--glow);
+            box-shadow: 0 0 0 3px rgba(0, 224, 255, 0.3);
         }
 
-        .form-input::placeholder {
-            color: var(--text-muted);
+        .formInput::placeholder {
+            color: var(--textMuted);
+        }
+        
+        .formInput.error {
+            border-color: #ff4d4f;
         }
 
-        textarea.form-input {
+        .errorText {
+            color: #ff4d4f;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        textarea.formInput {
             height: 120px;
             resize: vertical;
         }
 
-        /* Footer */
+        /* ====================================
+           5. Footer & Responsive Design
+           ==================================== */
         .footer {
             padding: 4rem 2rem;
             text-align: center;
-            border-top: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glassBorder);
         }
 
         .footer p {
             font-weight: 300;
-            color: var(--text-muted);
+            color: var(--textMuted);
             font-size: 0.9rem;
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
-            .nav-links {
+            .navLinks {
                 display: none;
             }
 
-            .menu-toggle {
+            .menuToggle {
                 display: block;
             }
 
-            .hero-container {
+            body {
+                padding-top: var(--navbarHeight);
+            }
+            .heroContainer,
+            .projectCard {
                 grid-template-columns: 1fr;
                 gap: 4rem;
                 text-align: center;
             }
 
-            .project-card {
-                grid-template-columns: 1fr;
-                gap: 3rem;
+            .heroVisual {
+                min-height: 400px;
+            }
+
+            .projectVisual {
+                order: -1;
             }
         }
 
         @media (max-width: 768px) {
-            .services-grid {
+            .servicesGrid {
                 grid-template-columns: 1fr;
-            }
-
-            .about-stats {
-                grid-template-columns: repeat(3, 1fr);
             }
         }
 
         @media (max-width: 480px) {
-            .about-stats {
+            .aboutStats {
                 grid-template-columns: 1fr;
             }
 
-            .nav-container {
+            .navContainer {
                 padding: 0 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Elements Background -->
-    <div class="floating-elements">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-
-    <div class="page-content">
-        <!-- Sticky Navigation -->
-        <nav class="navbar" id="navbar">
-            <div class="nav-container">
-                <div class="logo">Oryxen</div>
-                <ul class="nav-links">
+    <canvas id="threeDCanvas"></canvas>
+    <a href="#mainContent" class="skipToContent">Skip to content</a>
+    <div class="pageContent">
+        <header class="navbar" id="navbar">
+            <nav class="navContainer">
+                <a href="#home" class="logo" aria-label="Oryxen Home">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 0L0 16L16 32L32 16L16 0Z" fill="var(--accentColor)"/>
+                        <path d="M16 4L4 16L16 28L28 16L16 4Z" fill="var(--primaryDark)"/>
+                        <path d="M16 8L8 16L16 24L24 16L16 8Z" fill="var(--accentColor)"/>
+                        <path d="M16 12L12 16L16 20L20 16L16 12Z" fill="var(--primaryDark)"/>
+                    </svg>
+                    ORYXEN
+                </a>
+                <ul class="navLinks">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#services">Services</a></li>
                     <li><a href="#project">Project</a></li>
+                    <li><a href="#legal">Legal</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <button class="menu-toggle" id="menuToggle">
+                <button class="menuToggle" id="menuToggle" aria-label="Open menu">
                     <i class="ph-list ph-light"></i>
                 </button>
-            </div>
-        </nav>
+            </nav>
+        </header>
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <button class="close-menu" id="closeMenu">
+        <aside class="mobileMenu" id="mobileMenu" aria-modal="true">
+            <button class="closeMenu" id="closeMenu" aria-label="Close menu">
                 <i class="ph-x ph-light"></i>
             </button>
-            <a href="#home" class="mobile-link">Home</a>
-            <a href="#about" class="mobile-link">About</a>
-            <a href="#services" class="mobile-link">Services</a>
-            <a href="#project" class="mobile-link">Project</a>
-            <a href="#contact" class="mobile-link">Contact</a>
-        </div>
+            <a href="#home" class="mobileLink">Home</a>
+            <a href="#about" class="mobileLink">About</a>
+            <a href="#services" class="mobileLink">Services</a>
+            <a href="#project" class="mobileLink">Project</a>
+            <a href="#legal" class="mobileLink">Legal</a>
+            <a href="#contact" class="mobileLink">Contact</a>
+        </aside>
 
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero-container">
-                <div class="hero-content">
-                    <h1>AI Innovation<br>for <span class="highlight">Tomorrow</span></h1>
-                    <p>We craft intelligent solutions that transform how people work, learn, and live. One breakthrough at a time.</p>
-                    <button class="neu-button" onclick="document.getElementById('project').scrollIntoView()">
-                        <i class="ph-arrow-right ph-light" style="margin-right: 0.5rem;"></i>
-                        Explore Our Work
-                    </button>
-                </div>
-                <div class="hero-visual">
-                    <div class="hero-placeholder">
-                        <i class="ph-sparkle ph-light"></i>
-                        <p>AI Innovation Hub</p>
+        <main id="mainContent">
+            <section class="hero" id="home">
+                <div class="heroContainer">
+                    <div class="heroContent scrollAnimate">
+                        <h1>ENGINEERING <br> AI.</h1>
+                        <p>Oryxen is a deep-tech research firm building foundational software that redefines what's possible for professionals and innovators. We are driven by a commitment to security, portability, and powerful solutions.</p>
+                        <a href="#contact" class="neuButton" aria-label="Let's Talk">
+                            <i class="ph-paper-plane-tilt ph-light" style="margin-right: 0.5rem;"></i>
+                            CONTACT US
+                        </a>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="about scroll-animate" id="about">
-            <div class="about-container">
-                <h2 class="section-title">Building the Future</h2>
-                <p class="section-subtitle">
-                    Oryxen is a forward-thinking startup dedicated to creating AI-powered applications that solve real-world problems for students and professionals.
-                </p>
-                
-                <div class="founder-info scroll-animate">
-                    <h3>Founded by Aditya Choudhury</h3>
-                    <p>Building intelligent solutions with purpose and precision</p>
-                </div>
-                
-                <div class="about-stats">
-                    <div class="stat-item scroll-animate glass-card">
-                        <span class="stat-number">2025</span>
-                        <span class="stat-label">Founded</span>
-                    </div>
-                    <div class="stat-item scroll-animate glass-card">
-                        <span class="stat-number">01</span>
-                        <span class="stat-label">Active Project</span>
-                    </div>
-                    <div class="stat-item scroll-animate glass-card">
-                        <span class="stat-number">∞</span>
-                        <span class="stat-label">Potential</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section class="services scroll-animate" id="services">
-            <div class="services-container">
-                <h2 class="section-title">What We Do</h2>
-                <p class="section-subtitle">
-                    Specialized in creating AI solutions that enhance productivity and streamline workflows
-                </p>
-                
-                <div class="services-grid">
-                    <div class="service-card glass-card scroll-animate">
-                        <div class="service-icon">
-                            <i class="ph-brain ph-light"></i>
+                    <div class="heroVisual scrollAnimate">
+                        <div class="aiBrain">
+                            <div class="core"></div>
+                            <div class="nodes"></div>
                         </div>
-                        <h3>AI Development</h3>
-                        <p>Custom AI solutions tailored to your specific needs, from machine learning models to intelligent automation systems.</p>
                     </div>
+                </div>
+            </section>
+
+            <section class="about scrollAnimate" id="about">
+                <div class="aboutContainer">
+                    <h2 class="sectionTitle">ABOUT ORYXEN</h2>
+                    <p class="sectionSubtitle">
+                        Oryxen was born from the conviction that powerful technology should be private and secure. We exist to close the gap between academic AI research and real-world application.
+                    </p>
                     
-                    <div class="service-card glass-card scroll-animate">
-                        <div class="service-icon">
-                            <i class="ph-devices ph-light"></i>
-                        </div>
-                        <h3>App Development</h3>
-                        <p>Beautiful, intuitive applications that seamlessly integrate AI capabilities with exceptional user experiences.</p>
+                    <div class="founderInfo scrollAnimate">
+                        <h3>Founded by <span class="founderName">Aditya Choudhury</span></h3>
+                        <p>Building intelligent solutions with purpose and precision</p>
                     </div>
+
+                    <p class="sectionSubtitle" style="margin-bottom: 0;">
+                        Every line of code we write is a step towards a future where your data is yours, and your tools are a seamless extension of your genius.
+                    </p>
                     
-                    <div class="service-card glass-card scroll-animate">
-                        <div class="service-icon">
-                            <i class="ph-rocket ph-light"></i>
-                        </div>
-                        <h3>Innovation Consulting</h3>
-                        <p>Strategic guidance on implementing AI technologies to transform your business processes and workflows.</p>
+                    <div class="aboutStats">
+                        <article class="statItem scrollAnimate glassCard">
+                            <span class="statNumber" data-start="2000" data-target="2025">0</span>
+                            <span class="statLabel">Founded</span>
+                        </article>
+                        <article class="statItem scrollAnimate glassCard">
+                            <span class="statNumber" data-target="7">0</span>
+                            <span class="statLabel">Active Project</span>
+                        </article>
+                        <article class="statItem scrollAnimate glassCard">
+                            <span class="statNumber">∞</span>
+                            <span class="statLabel">Potential</span>
+                        </article>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Project Section -->
-        <section class="project scroll-animate" id="project">
-            <div class="project-container">
-                <h2 class="section-title">Our Flagship Project</h2>
-                <p class="section-subtitle">
-                    Introducing our revolutionary AI assistant designed to boost productivity
-                </p>
-                
-                <div class="project-showcase">
-                    <div class="project-card">
-                        <div class="project-info scroll-animate">
-                            <h3>Intelligent Productivity Suite</h3>
-                            <p>An AI-powered assistant that learns from your workflow patterns and suggests optimizations, automates repetitive tasks, and provides intelligent insights to boost your daily productivity.</p>
-                            <p>Built with cutting-edge machine learning algorithms and designed with a focus on intuitive user experience that adapts to your unique work style.</p>
-                            
-                            <div class="project-tech">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">TensorFlow</span>
-                                <span class="tech-tag">React</span>
-                                <span class="tech-tag">Node.js</span>
-                                <span class="tech-tag">OpenAI GPT</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                            </div>
-                        </div>
-                        <div class="project-visual scroll-animate">
-                            <div class="project-placeholder">
-                                <i class="ph-monitor-play ph-light" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem; display: block;"></i>
-                                Project Demo Coming Soon
-                            </div>
-                        </div>
+            <section class="services scrollAnimate" id="services">
+                <div class="servicesContainer">
+                    <h2 class="sectionTitle">OUR SERVICES</h2>
+                    <p class="sectionSubtitle">
+                        We provide custom, end-to-end solutions for professionals and organizations ready to innovate.
+                    </p>
+                    
+                    <div class="servicesGrid">
+                        <article class="serviceCard glassCard scrollAnimate">
+                            <figure class="serviceIcon">
+                                <i class="ph-brain ph-light" aria-hidden="true"></i>
+                            </figure>
+                            <h3>Custom AI Model Training</h3>
+                            <p>We don't use off-the-shelf models. We specialize in training bespoke AI models from the ground up, tailored to the unique demands of specific industries and complex data sets.</p>
+                        </article>
+                        
+                        <article class="serviceCard glassCard scrollAnimate">
+                            <figure class="serviceIcon">
+                                <i class="ph-lock-key ph-light" aria-hidden="true"></i>
+                            </figure>
+                            <h3>End-to-End Secure Software</h3>
+                            <p>We design and build desktop and mobile applications with security as a first principle. Our architecture includes AES/RSA encryption, process obfuscation, and zero-data-access guarantees, ensuring your privacy is ironclad.</p>
+                        </article>
+                        
+                        <article class="serviceCard glassCard scrollAnimate">
+                            <figure class="serviceIcon">
+                                <i class="ph-compass ph-light" aria-hidden="true"></i>
+                            </figure>
+                            <h3>Modular AI Ecosystems</h3>
+                            <p>We engineer dynamic, future-proof systems that seamlessly integrate and swap between leading AI APIs like Gemini, GPT-4, and Claude. Our focus is on building flexible platforms, not fragile apps.</p>
+                        </article>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Contact Section -->
-        <section class="contact scroll-animate" id="contact">
-            <div class="contact-container">
-                <h2 class="section-title">Let's Build Together</h2>
-                <p class="section-subtitle">
-                    Ready to discuss your next AI project? We'd love to hear from you.
-                </p>
-                
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label for="name">
-                            <i class="ph-user ph-light" style="margin-right: 0.5rem;"></i>
-                            Name
-                        </label>
-                        <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">
-                            <i class="ph-envelope ph-light" style="margin-right: 0.5rem;"></i>
-                            Email
-                        </label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">
-                            <i class="ph-chat-dots ph-light" style="margin-right: 0.5rem;"></i>
-                            Message
-                        </label>
-                        <textarea id="message" name="message" class="form-input" placeholder="Tell us about your project..." required></textarea>
-                    </div>
-                    <button type="submit" class="neu-button">
-                        <i class="ph-paper-plane-tilt ph-light" style="margin-right: 0.5rem;"></i>
-                        Send Message
-                    </button>
-                </form>
-            </div>
-        </section>
+            <section class="focusSection scrollAnimate" id="focus">
+                <div class="focusContainer">
+                    <h2 class="sectionTitle">OUR FOCUS</h2>
+                    <p class="sectionSubtitle">
+                        We build and test cutting-edge software solutions for:
+                    </p>
+                    <ul>
+                        <li><i class="ph-graduation-cap ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Education & Academia</li>
+                        <li><i class="ph-briefcase ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Professionals & Creatives</li>
+                        <li><i class="ph-buildings ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Businesses & Enterprises</li>
+                        <li><i class="ph-flask ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Deep Research & Development</li>
+                        <li><i class="ph-chart-line-up ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Finance & Analytics</li>
+                        <li><i class="ph-gavel ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Legal & Compliance</li>
+                        <li><i class="ph-book ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>Publishing & Content Creation</li>
+                    </ul>
+                </div>
+            </section>
 
-        <!-- Footer -->
+            <section class="project scrollAnimate" id="project">
+                <div class="projectContainer">
+                    <h2 class="sectionTitle">WHAT WE'RE BUILDING</h2>
+                    <p class="sectionSubtitle">
+                        Our latest project is a powerful AI assistant that seamlessly integrates into your daily workflow. It runs discreetly in the background, analyzing screen content and audio to provide real-time, insightful feedback. This tool goes beyond simple answers; it instantly points out key information, offers super-fast, conversational replies, and can even automatically schedule follow-up tasks and appointments. It’s designed to be a professional, indispensable partner that anticipates your needs without you even having to ask.
+                    </p>
+                    
+                    <div class="projectShowcase">
+                        <article class="projectCard">
+                            <div class="projectInfo scrollAnimate">
+                                <h3>A simple idea, a seamless workflow.</h3>
+                                <div class="projectTech">
+                                    <span class="techTag">Electron.js</span>
+                                    <span class="techTag">React + Tailwind</span>
+                                    <span class="techTag">AES/RSA</span>
+                                    <span class="techTag">Supabase</span>
+                                    <span class="techTag">Gemini AI</span>
+                                </div>
+                            </div>
+                            <div class="projectVisual scrollAnimate">
+                                <div class="projectMockup">
+                                    <div class="projectMockupInner">
+                                        <div class="codeLine" style="animation-delay: 0.2s;"></div>
+                                        <div class="codeLine" style="animation-delay: 0.4s;"></div>
+                                        <div class="codeLine" style="animation-delay: 0.6s;"></div>
+                                        <div class="codeLine" style="animation-delay: 0.8s;"></div>
+                                        <div class="codeLine" style="animation-delay: 1.0s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="legalSection scrollAnimate" id="legal">
+                <div class="legalContainer">
+                    <h2 class="sectionTitle">LEGAL & ETHICS</h2>
+                    <p class="sectionSubtitle">
+                        As a professional research and development firm, we are committed to ethical and legal practices in all our operations.
+                    </p>
+                    <p>Oryxen is a technology firm that operates under the jurisdiction and legal framework of India. Our business activities and software development comply with all applicable laws and regulations, including those outlined in the Indian Penal Code (IPC) and other relevant acts. We are dedicated to ensuring our software is used for legitimate professional and educational purposes, adhering strictly to standards of data privacy and security.</p>
+                    <p style="margin-top: 1rem;">This commitment to compliance is a core part of our mission to build technology that is not only powerful but also trustworthy and responsibly developed. We aim to contribute positively to the technological landscape while upholding the highest ethical and legal standards.</p>
+                </div>
+            </section>
+
+            <section class="supportSection scrollAnimate" id="support">
+                <div class="supportContainer">
+                    <div class="glassCard">
+                        <h2 class="sectionTitle" style="margin-bottom: 1rem;">SUPPORT OUR WORK</h2>
+                        <p class="sectionSubtitle" style="margin-bottom: 2rem;">
+                           If our solutions have helped you, consider a contribution to support our ongoing research into secure and groundbreaking AI technologies.
+                        </p>
+                        <a href="#contribute-page" class="neuButton" aria-label="Contribute to Our Mission">
+                            <i class="ph-heart-light" style="margin-right: 0.5rem;"></i>
+                            CONTRIBUTE
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="contributeUnavailablePage" id="contribute-page">
+                <div class="contactContainer">
+                    <h2 class="sectionTitle">CONTRIBUTIONS</h2>
+                    <p class="sectionSubtitle">
+                        Thank you for your generosity! Your support means a lot to us.
+                    </p>
+                    <div class="glassCard">
+                        <i class="ph-gear-six-light" style="font-size: 4rem; color: var(--accentColor); margin-bottom: 2rem;"></i>
+                        <p style="font-size: 1.2rem; color: var(--textWhite);">We are deeply grateful for your willingness to contribute. Currently, we are not accepting contributions as we finalize our infrastructure. This feature will be available in the near future.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;">Please check back soon for updates!</p>
+                    </div>
+                    <a href="#" class="neuButton back-button" data-target-section="#support" style="margin-top: 2rem;">BACK TO PREVIOUS PAGE</a>
+                </div>
+            </section>
+
+
+            <section class="contact scrollAnimate" id="contact">
+                <div class="contactContainer">
+                    <h2 class="sectionTitle">GET IN TOUCH</h2>
+                    <p class="sectionSubtitle">
+                        Our focus is on tackling the most challenging problems in AI and software. If you're a professional, researcher, or organization with a vision for the future, we'd love to discuss how our core technologies can help you pioneer. <br> You can also reach us directly at <a href="mailto:oryxenconnect@gmail.com" style="color: var(--textWhite); text-decoration: underline;">oryxenconnect@gmail.com</a>.
+                    </p>
+                    
+                    <form class="contactForm" id="contactForm" action="https://formspree.io/f/mandwdda" method="POST" novalidate>
+                        <div class="formGroup">
+                            <label for="name">
+                                <i class="ph-user ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>
+                                Name
+                            </label>
+                            <input type="text" id="name" name="name" class="formInput" placeholder="Your name" required>
+                            <p class="errorText" id="nameError">Name is required.</p>
+                        </div>
+                        <div class="formGroup">
+                            <label for="email">
+                                <i class="ph-envelope ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>
+                                Email
+                            </label>
+                            <input type="email" id="email" name="email" class="formInput" placeholder="your@email.com" required>
+                            <p class="errorText" id="emailError">Please enter a valid email address.</p>
+                        </div>
+                        <div class="formGroup">
+                            <label for="phone">
+                                <i class="ph-phone ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>
+                                Phone Number <span style="font-size: 0.8em; color: var(--textMuted);">(Optional)</span>
+                            </label>
+                            <input type="tel" id="phone" name="phone" class="formInput" placeholder="Your phone number">
+                        </div>
+                        <div class="formGroup">
+                            <label for="message">
+                                <i class="ph-chat-dots ph-light" aria-hidden="true" style="margin-right: 0.5rem;"></i>
+                                Message
+                            </label>
+                            <textarea id="message" name="message" class="formInput" placeholder="Tell us about your project..." required></textarea>
+                            <p class="errorText" id="messageError">Message is required.</p>
+                        </div>
+                        <button type="submit" class="neuButton" aria-label="Send Message">
+                            <i class="ph-paper-plane-tilt ph-light" style="margin-right: 0.5rem;"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="contactSuccessPage" id="contact-success">
+                <div class="contactContainer">
+                    <h2 class="sectionTitle">THANK YOU</h2>
+                    <p class="sectionSubtitle">
+                        Your message has been received. We will get in touch with you shortly.
+                    </p>
+                    <div class="glassCard" style="max-width: 500px; margin: 2rem auto; padding: 4rem;">
+                        <i class="ph-check-circle ph-light" style="font-size: 4rem; color: var(--accentColor); margin-bottom: 2rem;"></i>
+                        <p style="font-size: 1.2rem; color: var(--textWhite);">We appreciate you reaching out. Our team is reviewing your message and will contact you as soon as possible.</p>
+                    </div>
+                    <a href="#" class="neuButton back-button" data-target-section="#contact" style="margin-top: 2rem;">BACK TO CONTACT FORM</a>
+                </div>
+            </section>
+        </main>
+
         <footer class="footer">
-            <p>&copy; 2025 Oryxen. All rights reserved. | Founded by Aditya Choudhury</p>
+            <p>&copy; 2025 Oryxen. All rights reserved. | Built by Aditya Choudhury | <a href="mailto:oryxenconnect@gmail.com" style="color: var(--textMuted); text-decoration: none;">oryxenconnect@gmail.com</a></p>
         </footer>
+
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Navbar scroll effect
+        // Three.js 3D Background Animation
+        window.onload = function() {
+            const canvas = document.getElementById('threeDCanvas');
+            if (!canvas) return; // Exit if canvas not found
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x0a0a0b);
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10;
+
+            const geometry = new THREE.SphereGeometry(1, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ color: 0x00e0ff, wireframe: true, transparent: true, opacity: 0.2 });
+            const sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+
+            const lines = [];
+            const lineCount = 1000;
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0x00e0ff,
+                transparent: true,
+                opacity: 0.1,
+                blending: THREE.AdditiveBlending
+            });
+
+            for (let i = 0; i < lineCount; i++) {
+                const startPoint = new THREE.Vector3(
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 50
+                );
+                const endPoint = new THREE.Vector3(
+                    startPoint.x + (Math.random() - 0.5) * 5,
+                    startPoint.y + (Math.random() - 0.5) * 5,
+                    startPoint.z + (Math.random() - 0.5) * 5
+                );
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([startPoint, endPoint]);
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                lines.push({ mesh: line, speed: Math.random() * 0.05 + 0.01 });
+                scene.add(line);
+            }
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+
+                sphere.rotation.x += 0.001;
+                sphere.rotation.y += 0.002;
+                
+                lines.forEach(lineObj => {
+                    lineObj.mesh.position.z += lineObj.speed;
+                    if (lineObj.mesh.position.z > camera.position.z + 10) {
+                        lineObj.mesh.position.z = -50;
+                    }
+                });
+
+                renderer.render(scene, camera);
+            };
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            animate();
+        };
+
+        // Existing JS for menu, scroll, and form
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const offset = target.offsetTop - navbarHeight - 20;
+                    window.scrollTo({
+                        top: offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -1010,11 +1308,10 @@
             }
         });
 
-        // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         const closeMenu = document.getElementById('closeMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const mobileLinks = document.querySelectorAll('.mobileLink');
 
         menuToggle.addEventListener('click', function() {
             mobileMenu.classList.add('active');
@@ -1033,59 +1330,176 @@
             });
         });
 
-        // Scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver(function(entries, observer) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // Start number animation
+                    if (entry.target.classList.contains('statItem') && !entry.target.dataset.animated) {
+                        animateNumbers(entry.target);
+                        entry.target.dataset.animated = 'true';
+                    }
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.scroll-animate').forEach(el => {
+        document.querySelectorAll('.scrollAnimate').forEach(el => {
             observer.observe(el);
         });
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Number animation function
+        function animateNumbers(section) {
+            const statNumbers = section.querySelectorAll('.statNumber');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.dataset.target, 10);
+                const start = parseInt(stat.dataset.start, 10) || 0; // Get the start value, default to 0
+                if (isNaN(target)) return;
+
+                const duration = 1500;
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = start + Math.floor(progress * (target - start));
+                    stat.innerHTML = currentValue;
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        stat.innerHTML = target;
+                    }
+                };
+                window.requestAnimationFrame(step);
+            });
+        }
+        
+        // Contact Form Validation and Submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.errorText').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.formInput').forEach(el => el.classList.remove('error'));
+            
+            // Validate Name
+            const nameInput = document.getElementById('name');
+            if (nameInput.value.trim() === '') {
+                isValid = false;
+                nameInput.classList.add('error');
+                document.getElementById('nameError').style.display = 'block';
+            }
+            
+            // Validate Email
+            const emailInput = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value.trim())) {
+                isValid = false;
+                emailInput.classList.add('error');
+                document.getElementById('emailError').style.display = 'block';
+            }
+            
+            // Validate Message
+            const messageInput = document.getElementById('message');
+            if (messageInput.value.trim() === '') {
+                isValid = false;
+                messageInput.classList.add('error');
+                document.getElementById('messageError').style.display = 'block';
+            }
+            
+            if (isValid) {
+                const submitBtn = this.querySelector('.neuButton');
+                const originalContent = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="ph-spinner ph-light" style="margin-right: 0.5rem; animation: spin 1s linear infinite;"></i>Sending...';
+                submitBtn.disabled = true;
+                
+                // Use fetch to send data to Formspree without leaving the page
+                fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Success, show the success page
+                        contactForm.reset();
+                        document.getElementById('contact').style.display = 'none';
+                        document.getElementById('contribute-page').style.display = 'none';
+                        document.getElementById('contact-success').style.display = 'block';
+                        // Use the new scrolling function to scroll to the success page
+                        scrollToTarget('#contact-success');
+                    } else {
+                        // Handle errors, show a message to the user
+                        response.json().then(data => {
+                            if (data.errors) {
+                                console.log(data.errors);
+                                alert("There was an error with your submission. Please try again.");
+                            } else {
+                                alert("An unknown error occurred. Please try again.");
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    alert("An error occurred: " + error.message);
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
+                });
+            }
+        });
+
+        // Logic for showing the contribute unavailable page
+        document.querySelector('.supportSection .neuButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('.supportSection').style.display = 'none';
+            document.getElementById('contact').style.display = 'none';
+            document.getElementById('contact-success').style.display = 'none';
+            document.getElementById('contribute-page').style.display = 'block';
+            scrollToTarget('#contribute-page');
+        });
+        
+        // Logic for going back from the contribution unavailable/success pages
+        document.querySelectorAll('.back-button').forEach(button => {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                const targetSectionId = this.getAttribute('data-target-section');
+
+                // Hide the current page
+                document.getElementById('contribute-page').style.display = 'none';
+                document.getElementById('contact-success').style.display = 'none';
+                
+                // Show the original sections
+                document.getElementById('contact').style.display = 'block';
+                document.querySelector('.supportSection').style.display = 'block';
+
+                // Scroll back to the specific section
+                scrollToTarget(targetSectionId);
             });
         });
 
-        // Contact form handling
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('.neu-button');
-            const originalContent = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="ph-spinner ph-light" style="margin-right: 0.5rem; animation: spin 1s linear infinite;"></i>Sending...';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = '<i class="ph-check ph-light" style="margin-right: 0.5rem;"></i>Message Sent!';
-                setTimeout(() => {
-                    submitBtn.innerHTML = originalContent;
-                    submitBtn.disabled = false;
-                    this.reset();
-                }, 2000);
-            }, 1500);
-        });
+        // Reusable scrolling function
+        function scrollToTarget(targetSelector) {
+            const target = document.querySelector(targetSelector);
+            if (target) {
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                const offset = target.offsetTop - navbarHeight - 20;
+                window.scrollTo({
+                    top: offset,
+                    behavior: 'smooth'
+                });
+            }
+        }
 
-        // Add CSS for spinner animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes spin {
@@ -1094,25 +1508,6 @@
             }
         `;
         document.head.appendChild(style);
-
-        // Load background spline with fallback
-        window.addEventListener('load', function() {
-            const splineViewer = document.querySelector('.spline-background spline-viewer');
-            if (splineViewer) {
-                // Add error handling for spline viewer
-                splineViewer.addEventListener('error', function() {
-                    console.log('Spline model failed to load, using fallback gradient');
-                    this.style.display = 'none';
-                });
-                
-                // Force reload if not visible after 3 seconds
-                setTimeout(() => {
-                    if (splineViewer.offsetHeight === 0) {
-                        splineViewer.setAttribute('url', 'https://prod.spline.design/de399826-b9f3-4b1d-890f-7c261b47ebea/scene.splinecode');
-                    }
-                }, 3000);
-            }
-        });
     </script>
 </body>
 </html>
